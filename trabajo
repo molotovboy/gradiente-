@@ -1,0 +1,36 @@
+# def error()
+import numpy as np
+def solve_gradient (x, A, b, umbral=.000001):
+    Ax=np.dot(A,x)      #Matriz AX
+    A_t=np.transpose(A)  #Traspuesta de A
+    ite=0
+    k = 0.002 #Parámetros de ajuste o hiperparámetros
+    part_1=np.transpose(Ax-b)
+    part_2= Ax-b
+    error_total=np.dot(part_1,part_2)
+    while error_total > umbral:
+        Ax=np.dot(A,x)              #Se actualiza Ax
+        ite=ite+1
+        element_1 = np.dot(A_t,Ax)  # A_t*Ax
+        element_2 = np.dot(A_t, b)  #A_t* b
+        gradiente=element_1-element_2
+        #calculamos el error totat
+        # (Ax-b)t * (Ax-b) nos da los la suma elementos de Ax-b elevados al cuadrado
+        error_total=np.dot(np.transpose(Ax-b),Ax-b)
+        #hacemos el ciclo hasta que encuentre la solucion
+        x=x-k *gradiente
+    #retornamos la solucion  y el error.
+    return x, error_total, ite
+
+A_coef = np.array([[2.0, 1.0, -3.0], 
+                   [5.0, -4.0, 1.0],
+                   [1.0, -1.0, -4.0]])
+
+b_coef = np.array([7.0, -19.0, 4.0])
+
+x_sol = np.array([1.0, 1.0, 1.0])
+
+u,v, i=solve_gradient(x_sol, A_coef, b_coef)
+print("-----------------------------------------------\nSolución x=",u)
+print("Con un error de:",v)
+print(":::: Total de iteraciones:",i,"::::::")
